@@ -1,16 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { ChatbotFab } from "./ChatBotFab";
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-paper text-ink font-sans">
-      <Sidebar />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 min-w-0 flex flex-col">
-        <Topbar />
-        <div className="flex-1 p-8">
-          <div className="max-w-350 mx-auto space-y-8 animate-in-up">
+        <Topbar onMenuClick={() => setSidebarOpen(true)} />
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="max-w-[min(1380px,100%)] mx-auto space-y-8 animate-in-up">
             {children}
           </div>
         </div>

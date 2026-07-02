@@ -1,8 +1,6 @@
 "use client";
 
-"use client";
-
-import { Bell, Search } from "lucide-react";
+import { Bell, Menu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const titles: Record<string, { title: string; subtitle: string }> = {
@@ -52,19 +50,31 @@ const titles: Record<string, { title: string; subtitle: string }> = {
   },
 };
 
-export function Topbar() {
+export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const pathname = usePathname() || "/";
   const meta = titles[pathname] ?? titles["/"];
 
   return (
-    <header className="h-16 border-b border-hairline bg-white/70 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-20">
-      <div>
-        <h1 className="font-display italic text-xl leading-none">
-          {meta.title}
-        </h1>
-        <p className="text-[11px] text-ink-muted mt-1">{meta.subtitle}</p>
+    <header className="h-16 border-b border-hairline bg-white/70 backdrop-blur px-4 sm:px-8 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-20">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          className="grid place-items-center md:hidden size-10 rounded-md bg-navy text-gold border border-hairline hover:bg-cream/10"
+          aria-label="Open navigation"
+        >
+          <Menu className="size-4" />
+        </button>
+        <div className="min-w-0">
+          <h1 className="font-display italic text-xl leading-none truncate">
+            {meta.title}
+          </h1>
+          <p className="text-[11px] text-ink-muted mt-1 truncate">
+            {meta.subtitle}
+          </p>
+        </div>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-1 flex-wrap items-center justify-end gap-3">
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-muted" />
           <input
@@ -77,7 +87,7 @@ export function Topbar() {
           <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gold" />
         </button>
         <div className="h-5 w-px bg-hairline" />
-        <button className="text-sm font-medium px-4 h-9 bg-gold text-navy rounded-md hover:brightness-105 transition">
+        <button className="text-sm font-medium px-3 sm:px-4 h-9 bg-gold text-navy rounded-md hover:brightness-105 transition">
           New Session
         </button>
       </div>

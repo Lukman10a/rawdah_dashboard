@@ -14,6 +14,7 @@ import {
   Sparkles,
   Bot,
   Settings,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -48,68 +49,149 @@ const groups: { title: string; items: NavItem[] }[] = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const pathname = usePathname() || "/";
 
   return (
-    <aside className="w-64 shrink-0 bg-navy text-cream flex flex-col sticky top-0 h-screen border-r border-gold/20">
-      <div className="p-6 border-b border-white/5">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="size-9 bg-gold rounded-sm grid place-items-center text-navy font-display font-bold text-lg">
-            R
-          </div>
-          <div className="leading-tight">
-            <div className="font-display italic text-lg tracking-tight">
-              Rawdah LMS
+    <>
+      <aside className="hidden md:flex md:w-64 shrink-0 bg-navy text-cream flex-col sticky top-0 h-screen border-r border-gold/20">
+        <div className="p-6 border-b border-white/5">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="size-9 bg-gold rounded-sm grid place-items-center text-navy font-display font-bold text-lg">
+              R
             </div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-cream/50">
-              Rawdatul Atfaal
+            <div className="leading-tight">
+              <div className="font-display italic text-lg tracking-tight">
+                Rawdah LMS
+              </div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-cream/50">
+                Rawdatul Atfaal
+              </div>
             </div>
-          </div>
-        </Link>
-      </div>
+          </Link>
+        </div>
 
-      <nav className="flex-1 p-4 space-y-6 overflow-y-auto no-scrollbar">
-        {groups.map((group) => (
-          <div key={group.title}>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-cream/40 px-3 py-2">
-              {group.title}
+        <nav className="flex-1 p-4 space-y-6 overflow-y-auto no-scrollbar">
+          {groups.map((group) => (
+            <div key={group.title}>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-cream/40 px-3 py-2">
+                {group.title}
+              </div>
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const active = pathname === item.href;
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
+                        active
+                          ? "bg-white/10 text-gold"
+                          : "text-cream/80 hover:bg-white/5 hover:text-cream"
+                      }`}
+                    >
+                      <Icon className="size-4 shrink-0" />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-            <div className="space-y-1">
-              {group.items.map((item) => {
-                const active = pathname === item.href;
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
-                      active
-                        ? "bg-white/10 text-gold"
-                        : "text-cream/80 hover:bg-white/5 hover:text-cream"
-                    }`}
-                  >
-                    <Icon className="size-4 shrink-0" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </nav>
+          ))}
+        </nav>
 
-      <div className="p-4 border-t border-white/5">
-        <div className="flex items-center gap-3 px-3 py-2">
-          <div className="size-9 rounded-full bg-linear-to-br from-gold to-gold-soft grid place-items-center text-navy font-bold text-xs">
-            IS
-          </div>
-          <div className="text-xs leading-tight">
-            <p className="font-medium text-cream">Ustadh Ibrahim S.</p>
-            <p className="text-cream/50">Principal · Admin</p>
+        <div className="p-4 border-t border-white/5">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="size-9 rounded-full bg-linear-to-br from-gold to-gold-soft grid place-items-center text-navy font-bold text-xs">
+              IS
+            </div>
+            <div className="text-xs leading-tight">
+              <p className="font-medium text-cream">Ustadh Ibrahim S.</p>
+              <p className="text-cream/50">Principal · Admin</p>
+            </div>
           </div>
         </div>
+      </aside>
+
+      <div
+        className={`fixed inset-0 z-50 md:hidden ${open ? "block" : "hidden"}`}
+      >
+        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+        <aside className="relative z-10 w-[min(18rem,calc(100vw-2rem))] h-full bg-navy text-cream flex flex-col border-r border-gold/20 shadow-2xl">
+          <div className="flex items-center justify-between p-4 border-b border-white/5">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="size-9 bg-gold rounded-sm grid place-items-center text-navy font-display font-bold text-lg">
+                R
+              </div>
+              <div className="leading-tight">
+                <div className="font-display italic text-lg tracking-tight">
+                  Rawdah LMS
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-cream/50">
+                  Rawdatul Atfaal
+                </div>
+              </div>
+            </Link>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-md p-2 text-cream/80 hover:bg-white/10 hover:text-cream"
+              aria-label="Close navigation"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+
+          <nav className="flex-1 p-4 space-y-6 overflow-y-auto no-scrollbar">
+            {groups.map((group) => (
+              <div key={group.title}>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-cream/40 px-3 py-2">
+                  {group.title}
+                </div>
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const active = pathname === item.href;
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
+                          active
+                            ? "bg-white/10 text-gold"
+                            : "text-cream/80 hover:bg-white/5 hover:text-cream"
+                        }`}
+                      >
+                        <Icon className="size-4 shrink-0" />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </nav>
+
+          <div className="p-4 border-t border-white/5">
+            <div className="flex items-center gap-3 px-3 py-2">
+              <div className="size-9 rounded-full bg-linear-to-br from-gold to-gold-soft grid place-items-center text-navy font-bold text-xs">
+                IS
+              </div>
+              <div className="text-xs leading-tight">
+                <p className="font-medium text-cream">Ustadh Ibrahim S.</p>
+                <p className="text-cream/50">Principal · Admin</p>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
-    </aside>
+    </>
   );
 }

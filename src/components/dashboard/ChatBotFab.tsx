@@ -57,7 +57,7 @@ export function ChatbotFab() {
   return (
     <>
       {open && (
-        <div className="fixed bottom-24 right-6 z-40 w-95 max-w-[calc(100vw-3rem)] bg-white rounded-2xl border border-hairline shadow-2xl overflow-hidden flex flex-col">
+        <div className="fixed bottom-24 inset-x-3 z-40 mx-auto w-auto max-w-[34rem] bg-white rounded-2xl border border-hairline shadow-2xl overflow-hidden flex flex-col">
           <div className="bg-navy text-cream px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="size-4 text-gold" />

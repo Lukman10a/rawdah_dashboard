@@ -1,6 +1,10 @@
 import { Plus, Star } from "lucide-react";
 
-import { Card, KpiCard, PageHeader } from "@/components/dashboard/dashboard-shell";
+import {
+  Card,
+  KpiCard,
+  PageHeader,
+} from "@/components/dashboard/dashboard-shell";
 import { computePay, teachers } from "@/lib/mock-data";
 
 export default function TeachersPage() {

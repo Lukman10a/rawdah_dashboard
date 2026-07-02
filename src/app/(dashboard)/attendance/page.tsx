@@ -12,7 +12,11 @@ import {
   YAxis,
 } from "recharts";
 
-import { Card, KpiCard, PageHeader } from "@/components/dashboard/dashboard-shell";
+import {
+  Card,
+  KpiCard,
+  PageHeader,
+} from "@/components/dashboard/dashboard-shell";
 import { attendance30d } from "@/lib/mock-data";
 
 export default function AttendancePage() {

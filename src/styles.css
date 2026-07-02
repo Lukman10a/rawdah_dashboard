@@ -123,6 +123,28 @@
   animation: entrance 0.55s cubic-bezier(0.19, 1, 0.22, 1) both;
 }
 
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

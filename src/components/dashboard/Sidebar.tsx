@@ -69,7 +69,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
+      <nav className="flex-1 p-4 space-y-6 overflow-y-auto no-scrollbar">
         {groups.map((group) => (
           <div key={group.title}>
             <div className="text-[10px] uppercase tracking-[0.2em] text-cream/40 px-3 py-2">

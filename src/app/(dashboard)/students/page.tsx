@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import {
@@ -71,7 +72,10 @@ export default function StudentsPage() {
             {students.map((s) => (
               <tr key={s.id} className="hover:bg-cream/40">
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
+                  <Link
+                    href={`/students/${s.id}`}
+                    className="flex items-center gap-3"
+                  >
                     <div className="size-9 rounded-full bg-gradient-to-br from-gold-soft to-gold grid place-items-center text-navy text-xs font-bold">
                       {s.name[0]}
                     </div>
@@ -81,7 +85,7 @@ export default function StudentsPage() {
                         {s.id}
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </td>
                 <td className="px-6 py-4">{s.grade}</td>
                 <td className="px-6 py-4">

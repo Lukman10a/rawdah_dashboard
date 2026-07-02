@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Plus, Star } from "lucide-react";
 
 import {
@@ -81,7 +82,10 @@ export default function TeachersPage() {
               {teachers.map((t) => (
                 <tr key={t.id} className="hover:bg-cream/40 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
+                    <Link
+                      href={`/teachers/${t.id}`}
+                      className="flex items-center gap-3"
+                    >
                       <div className="size-9 rounded-full bg-gradient-to-br from-navy-soft to-navy grid place-items-center text-cream text-xs font-bold">
                         {t.name.split(" ").slice(-1)[0][0]}
                       </div>
@@ -91,7 +95,7 @@ export default function TeachersPage() {
                           {t.title} · {t.id}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </td>
                   <td className="px-6 py-4 text-ink-muted">
                     {t.specialization}

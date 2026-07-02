@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
@@ -30,7 +31,10 @@ export default function StaffPage() {
             {staff.map((s) => (
               <tr key={s.id} className="hover:bg-cream/40 transition-colors">
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
+                  <Link
+                    href={`/staff/${s.id}`}
+                    className="flex items-center gap-3"
+                  >
                     <div className="size-9 rounded-full bg-gradient-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
                       {s.name.split(" ").slice(-1)[0][0]}
                     </div>
@@ -40,7 +44,7 @@ export default function StaffPage() {
                         {s.email}
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </td>
                 <td className="px-6 py-4">{s.role}</td>
                 <td className="px-6 py-4 text-ink-muted">{s.department}</td>

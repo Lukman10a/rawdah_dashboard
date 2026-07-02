@@ -55,7 +55,7 @@ export function ChatbotFab() {
   return (
     <>
       {open && (
-        <div className="fixed bottom-24 right-6 z-40 w-[380px] max-w-[calc(100vw-3rem)] bg-white rounded-2xl border border-hairline shadow-2xl overflow-hidden flex flex-col">
+        <div className="fixed bottom-24 right-6 z-40 w-95 max-w-[calc(100vw-3rem)] bg-white rounded-2xl border border-hairline shadow-2xl overflow-hidden flex flex-col">
           <div className="bg-navy text-cream px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="size-4 text-gold" />
@@ -73,7 +73,7 @@ export function ChatbotFab() {
 
           <div
             ref={scrollRef}
-            className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[380px] bg-paper"
+            className="flex-1 overflow-y-auto p-4 space-y-3 max-h-95 bg-paper"
           >
             {msgs.map((m, i) => (
               <div

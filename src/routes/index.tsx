@@ -10,8 +10,18 @@ import {
   Line,
   LineChart,
 } from "recharts";
-import { ArrowUpRight, TrendingUp, Sparkles, BookOpenCheck, Wallet } from "lucide-react";
-import { Card, KpiCard, PageHeader } from "../components/dashboard/DashboardLayout";
+import {
+  ArrowUpRight,
+  TrendingUp,
+  Sparkles,
+  BookOpenCheck,
+  Wallet,
+} from "lucide-react";
+import {
+  Card,
+  KpiCard,
+  PageHeader,
+} from "../components/dashboard/DashboardLayout";
 import {
   teachers,
   computePay,
@@ -44,14 +54,25 @@ function Dashboard() {
         description="Real-time intelligence for Rawdatul Atfaal · Term III"
         right={
           <div className="flex items-center gap-2 text-xs text-ink-muted font-mono">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" /> Live sync
+            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />{" "}
+            Live sync
           </div>
         }
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KpiCard label="Total Students" value="1,248" hint="+4.2% vs last term" accent="green" />
-        <KpiCard label="Active Teachers" value={String(activeTeachers)} hint="98% attendance" accent="muted" />
+        <KpiCard
+          label="Total Students"
+          value="1,248"
+          hint="+4.2% vs last term"
+          accent="green"
+        />
+        <KpiCard
+          label="Active Teachers"
+          value={String(activeTeachers)}
+          hint="98% attendance"
+          accent="muted"
+        />
         <KpiCard
           label="Monthly Payroll"
           value={`$${monthlyPayroll.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
@@ -66,8 +87,12 @@ function Dashboard() {
         <Card className="lg:col-span-2 p-6">
           <div className="flex justify-between items-end mb-6">
             <div>
-              <h3 className="font-display italic text-lg">Enrollment & Performance</h3>
-              <p className="text-xs text-ink-muted">Six lunar months, whole institute</p>
+              <h3 className="font-display italic text-lg">
+                Enrollment & Performance
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Six lunar months, whole institute
+              </p>
             </div>
             <div className="flex gap-4 text-[10px] font-mono uppercase tracking-widest text-ink-muted">
               <span className="flex items-center gap-1.5">
@@ -80,7 +105,10 @@ function Dashboard() {
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={enrollmentSeries} margin={{ left: -10, right: 10, top: 5 }}>
+              <AreaChart
+                data={enrollmentSeries}
+                margin={{ left: -10, right: 10, top: 5 }}
+              >
                 <defs>
                   <linearGradient id="fillNavy" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#0a1834" stopOpacity={0.25} />
@@ -91,9 +119,23 @@ function Dashboard() {
                     <stop offset="100%" stopColor="#d4a94a" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#0a18341a" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#6b7691" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#6b7691" }} axisLine={false} tickLine={false} width={40} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#0a18341a"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11, fill: "#6b7691" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: "#6b7691" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={40}
+                />
                 <Tooltip
                   contentStyle={{
                     borderRadius: 8,
@@ -102,8 +144,20 @@ function Dashboard() {
                     fontFamily: "Inter",
                   }}
                 />
-                <Area type="monotone" dataKey="enrollment" stroke="#0a1834" strokeWidth={2} fill="url(#fillNavy)" />
-                <Area type="monotone" dataKey="performance" stroke="#d4a94a" strokeWidth={2} fill="url(#fillGold)" />
+                <Area
+                  type="monotone"
+                  dataKey="enrollment"
+                  stroke="#0a1834"
+                  strokeWidth={2}
+                  fill="url(#fillNavy)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="performance"
+                  stroke="#d4a94a"
+                  strokeWidth={2}
+                  fill="url(#fillGold)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -116,7 +170,8 @@ function Dashboard() {
           </h3>
 
           {aiInsights.slice(0, 3).map((it, i) => {
-            const Icon = insightIcon[it.kind as keyof typeof insightIcon] ?? Sparkles;
+            const Icon =
+              insightIcon[it.kind as keyof typeof insightIcon] ?? Sparkles;
             const dark = i === 0;
             return (
               <div
@@ -138,10 +193,14 @@ function Dashboard() {
                       dark ? "bg-gold/20" : "bg-cream"
                     }`}
                   >
-                    <Icon className={`size-3 ${dark ? "text-gold" : "text-navy"}`} />
+                    <Icon
+                      className={`size-3 ${dark ? "text-gold" : "text-navy"}`}
+                    />
                   </div>
                 </div>
-                <p className={`font-medium mt-3 text-sm ${dark ? "text-cream" : "text-navy"}`}>
+                <p
+                  className={`font-medium mt-3 text-sm ${dark ? "text-cream" : "text-navy"}`}
+                >
                   {it.title}
                 </p>
                 <p
@@ -168,10 +227,17 @@ function Dashboard() {
         <Card className="lg:col-span-2 overflow-hidden">
           <div className="p-6 border-b border-hairline flex justify-between items-center">
             <div>
-              <h3 className="font-display italic text-lg">Teaching Faculty Payroll</h3>
-              <p className="text-xs text-ink-muted mt-0.5">Hourly instructors · current month</p>
+              <h3 className="font-display italic text-lg">
+                Teaching Faculty Payroll
+              </h3>
+              <p className="text-xs text-ink-muted mt-0.5">
+                Hourly instructors · current month
+              </p>
             </div>
-            <Link to="/payroll" className="text-xs text-navy/70 hover:text-navy underline underline-offset-4">
+            <Link
+              to="/payroll"
+              className="text-xs text-navy/70 hover:text-navy underline underline-offset-4"
+            >
               Open payroll
             </Link>
           </div>
@@ -191,16 +257,30 @@ function Dashboard() {
                   .filter((t) => t.employmentType === "Hourly")
                   .slice(0, 6)
                   .map((t) => (
-                    <tr key={t.id} className="hover:bg-cream/40 transition-colors">
+                    <tr
+                      key={t.id}
+                      className="hover:bg-cream/40 transition-colors"
+                    >
                       <td className="px-6 py-3.5">
                         <div className="font-medium text-navy">{t.name}</div>
-                        <div className="text-[11px] text-ink-muted">{t.title} · {t.id}</div>
+                        <div className="text-[11px] text-ink-muted">
+                          {t.title} · {t.id}
+                        </div>
                       </td>
-                      <td className="px-6 py-3.5 text-ink-muted">{t.specialization}</td>
-                      <td className="px-6 py-3.5 font-mono text-xs">${t.hourlyRate.toFixed(2)}</td>
-                      <td className="px-6 py-3.5 font-mono text-xs">{t.hoursLogged.toFixed(1)}</td>
+                      <td className="px-6 py-3.5 text-ink-muted">
+                        {t.specialization}
+                      </td>
+                      <td className="px-6 py-3.5 font-mono text-xs">
+                        ${t.hourlyRate.toFixed(2)}
+                      </td>
+                      <td className="px-6 py-3.5 font-mono text-xs">
+                        {t.hoursLogged.toFixed(1)}
+                      </td>
                       <td className="px-6 py-3.5 text-right font-mono font-bold text-navy">
-                        ${computePay(t).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        $
+                        {computePay(t).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })}
                       </td>
                     </tr>
                   ))}
@@ -213,7 +293,12 @@ function Dashboard() {
           <Card className="p-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-display italic text-lg">Parent Feed</h3>
-              <Link to="/parents" className="text-[11px] text-ink-muted hover:text-navy">View all</Link>
+              <Link
+                to="/parents"
+                className="text-[11px] text-ink-muted hover:text-navy"
+              >
+                View all
+              </Link>
             </div>
             <div className="space-y-4">
               {parentUpdates.map((p) => (
@@ -224,9 +309,13 @@ function Dashboard() {
                   <div className="min-w-0">
                     <div className="text-xs font-medium text-navy">
                       {p.child}{" "}
-                      <span className="text-ink-muted font-normal">· {p.when}</span>
+                      <span className="text-ink-muted font-normal">
+                        · {p.when}
+                      </span>
                     </div>
-                    <p className="text-xs text-ink-muted leading-relaxed mt-0.5">{p.note}</p>
+                    <p className="text-xs text-ink-muted leading-relaxed mt-0.5">
+                      {p.note}
+                    </p>
                     <span className="inline-block mt-1.5 text-[10px] font-mono uppercase tracking-widest text-gold">
                       {p.type}
                     </span>
@@ -240,23 +329,36 @@ function Dashboard() {
             <h3 className="font-display italic text-lg mb-3">Notifications</h3>
             <div className="space-y-3">
               {notifications.map((n) => (
-                <div key={n.title} className="flex justify-between gap-3 text-xs">
+                <div
+                  key={n.title}
+                  className="flex justify-between gap-3 text-xs"
+                >
                   <div>
                     <div className="font-medium text-navy">{n.title}</div>
                     <div className="text-ink-muted">{n.desc}</div>
                   </div>
-                  <div className="text-ink-muted font-mono shrink-0">{n.when}</div>
+                  <div className="text-ink-muted font-mono shrink-0">
+                    {n.when}
+                  </div>
                 </div>
               ))}
             </div>
           </Card>
 
           <Card className="p-5">
-            <h3 className="font-display italic text-lg mb-3">Weekly Performance</h3>
+            <h3 className="font-display italic text-lg mb-3">
+              Weekly Performance
+            </h3>
             <div className="h-32">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={enrollmentSeries}>
-                  <Line type="monotone" dataKey="performance" stroke="#d4a94a" strokeWidth={2} dot={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="performance"
+                    stroke="#d4a94a"
+                    strokeWidth={2}
+                    dot={false}
+                  />
                   <XAxis dataKey="month" hide />
                   <YAxis hide domain={[80, 95]} />
                   <Tooltip contentStyle={{ fontSize: 11, borderRadius: 6 }} />

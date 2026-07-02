@@ -1,11 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState, useEffect } from "react";
-import { Card, PageHeader } from "../components/dashboard/DashboardLayout";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { Send, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/chatbot")({
-  component: ChatbotPage,
-});
+import { Card, PageHeader } from "../components/dashboard-shell";
 
 type Msg = { role: "user" | "ai"; text: string };
 
@@ -31,7 +29,7 @@ function reply(q: string): string {
   return "I can help with payroll forecasting, staff workload, curriculum audits, and parent communications. Try one of the starters on the right.";
 }
 
-function ChatbotPage() {
+export default function ChatbotPage() {
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: "ai",
@@ -42,7 +40,10 @@ function ChatbotPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [msgs]);
 
   const send = (q: string) => {
@@ -50,7 +51,10 @@ function ChatbotPage() {
     if (!text) return;
     setMsgs((m) => [...m, { role: "user", text }]);
     setInput("");
-    setTimeout(() => setMsgs((m) => [...m, { role: "ai", text: reply(text) }]), 600);
+    setTimeout(
+      () => setMsgs((m) => [...m, { role: "ai", text: reply(text) }]),
+      600,
+    );
   };
 
   return (
@@ -66,7 +70,7 @@ function ChatbotPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="lg:col-span-2 flex flex-col min-h-[540px]">
+        <Card className="lg:col-span-2 flex flex-col min-h-135">
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4">
             {msgs.map((m, i) => (
               <div
@@ -105,7 +109,9 @@ function ChatbotPage() {
 
         <Card className="p-5 h-fit">
           <h3 className="font-display italic text-lg mb-2">Try a starter</h3>
-          <p className="text-xs text-ink-muted mb-4">Copilot uses live mock data from your institute.</p>
+          <p className="text-xs text-ink-muted mb-4">
+            Copilot uses live mock data from your institute.
+          </p>
           <div className="space-y-2">
             {starters.map((s) => (
               <button

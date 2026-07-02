@@ -1,14 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, PageHeader } from "../components/dashboard/DashboardLayout";
+import { Card, PageHeader } from "../components/dashboard-shell";
 
-export const Route = createFileRoute("/settings")({
-  component: SettingsPage,
-});
-
-function SettingsPage() {
+export default function SettingsPage() {
   return (
     <>
-      <PageHeader title="Settings" description="Institute preferences and access control" />
+      <PageHeader
+        title="Settings"
+        description="Institute preferences and access control"
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="p-6">
           <h3 className="font-display italic text-lg mb-4">Institute</h3>
@@ -31,11 +29,25 @@ function SettingsPage() {
         <Card className="p-6">
           <h3 className="font-display italic text-lg mb-4">Roles</h3>
           <div className="space-y-2 text-sm">
-            {["Principal", "Vice Principal", "Registrar", "Finance", "Teacher", "Parent"].map((r) => (
-              <div key={r} className="flex justify-between border-b border-hairline py-2 last:border-0">
+            {[
+              "Principal",
+              "Vice Principal",
+              "Registrar",
+              "Finance",
+              "Teacher",
+              "Parent",
+            ].map((r) => (
+              <div
+                key={r}
+                className="flex justify-between border-b border-hairline py-2 last:border-0"
+              >
                 <span>{r}</span>
                 <span className="text-ink-muted text-xs font-mono">
-                  {r === "Principal" ? "Full access" : r === "Parent" ? "Child-scoped" : "Scoped"}
+                  {r === "Principal"
+                    ? "Full access"
+                    : r === "Parent"
+                      ? "Child-scoped"
+                      : "Scoped"}
                 </span>
               </div>
             ))}
@@ -50,11 +62,16 @@ function SettingsPage() {
               ["Payroll Forecast Assistant", true],
               ["Parent Communication Drafts", false],
             ].map(([name, on]) => (
-              <div key={String(name)} className="flex items-center justify-between text-sm">
+              <div
+                key={String(name)}
+                className="flex items-center justify-between text-sm"
+              >
                 <span>{name as string}</span>
                 <span
                   className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                    on ? "bg-emerald-50 text-emerald-700" : "bg-cream text-ink-muted"
+                    on
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-cream text-ink-muted"
                   }`}
                 >
                   {on ? "Enabled" : "Off"}

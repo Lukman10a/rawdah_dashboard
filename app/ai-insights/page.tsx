@@ -1,12 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, PageHeader } from "../components/dashboard/DashboardLayout";
-import { aiInsights } from "../lib/mock-data";
-import { Sparkles, BookOpenCheck, Wallet, TrendingUp, CalendarCheck } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import {
+  BookOpenCheck,
+  CalendarCheck,
+  Sparkles,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 
-export const Route = createFileRoute("/ai-insights")({
-  component: AiInsightsPage,
-});
+import { Card, PageHeader } from "../components/dashboard-shell";
+import { aiInsights } from "@/lib/mock-data";
+
+import type { LucideIcon } from "lucide-react";
 
 const iconMap: Record<string, LucideIcon> = {
   "Attendance Pattern": CalendarCheck,
@@ -22,7 +25,7 @@ const sevBadge = {
   Critical: "bg-rose-50 text-rose-700",
 } as const;
 
-function AiInsightsPage() {
+export default function AiInsightsPage() {
   return (
     <>
       <PageHeader
@@ -49,23 +52,27 @@ function AiInsightsPage() {
                     <div className="text-[10px] uppercase tracking-widest text-ink-muted font-mono">
                       {it.kind}
                     </div>
-                    <div className="font-display italic text-lg text-navy mt-0.5">{it.title}</div>
+                    <div className="font-display italic text-lg text-navy mt-0.5">
+                      {it.title}
+                    </div>
                   </div>
                 </div>
                 <span
-                  className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                    sevBadge[it.severity as keyof typeof sevBadge]
-                  }`}
+                  className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${sevBadge[it.severity as keyof typeof sevBadge]}`}
                 >
                   {it.severity}
                 </span>
               </div>
-              <p className="text-sm text-ink-muted mt-4 leading-relaxed">{it.detail}</p>
+              <p className="text-sm text-ink-muted mt-4 leading-relaxed">
+                {it.detail}
+              </p>
               <div className="mt-5 flex items-center gap-3">
                 <button className="text-xs font-medium bg-navy text-cream px-3 py-1.5 rounded-md hover:brightness-110">
                   {it.action}
                 </button>
-                <button className="text-xs text-ink-muted hover:text-navy">Dismiss</button>
+                <button className="text-xs text-ink-muted hover:text-navy">
+                  Dismiss
+                </button>
               </div>
             </Card>
           );

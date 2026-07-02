@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import { ChatBotFab } from "./ChatBotFab";
+import { ChatbotFab } from "./ChatBotFab";
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -15,7 +15,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </main>
-      <ChatBotFab />
+      <ChatbotFab />
     </div>
   );
 }

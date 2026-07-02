@@ -1,4 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import {
   Area,
   AreaChart,
@@ -7,33 +9,29 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  Line,
-  LineChart,
 } from "recharts";
 import {
   ArrowUpRight,
-  TrendingUp,
-  Sparkles,
   BookOpenCheck,
+  Sparkles,
+  TrendingUp,
   Wallet,
 } from "lucide-react";
+
 import {
+  DashboardShell,
   Card,
   KpiCard,
   PageHeader,
-} from "../components/dashboard/DashboardLayout";
+} from "./components/dashboard-shell";
 import {
-  teachers,
+  aiInsights,
   computePay,
   enrollmentSeries,
-  aiInsights,
   notifications,
   parentUpdates,
-} from "../lib/mock-data";
-
-export const Route = createFileRoute("/")({
-  component: Dashboard,
-});
+  teachers,
+} from "@/lib/mock-data";
 
 const insightIcon = {
   "Attendance Pattern": Sparkles,
@@ -43,12 +41,12 @@ const insightIcon = {
   "Student Risk": TrendingUp,
 } as const;
 
-function Dashboard() {
+export default function DashboardPage() {
   const monthlyPayroll = teachers.reduce((s, t) => s + computePay(t), 0);
   const activeTeachers = teachers.filter((t) => t.status === "Active").length;
 
   return (
-    <>
+    <DashboardShell>
       <PageHeader
         title="Institutional Overview"
         description="Real-time intelligence for Rawdatul Atfaal · Term III"
@@ -83,7 +81,6 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Chart */}
         <Card className="lg:col-span-2 p-6">
           <div className="flex justify-between items-end mb-6">
             <div>
@@ -163,7 +160,6 @@ function Dashboard() {
           </div>
         </Card>
 
-        {/* AI Insights */}
         <div className="space-y-4">
           <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-muted">
             Intelligence Center
@@ -173,6 +169,7 @@ function Dashboard() {
             const Icon =
               insightIcon[it.kind as keyof typeof insightIcon] ?? Sparkles;
             const dark = i === 0;
+
             return (
               <div
                 key={it.id}
@@ -189,9 +186,7 @@ function Dashboard() {
                     {String(i + 1).padStart(2, "0")} · {it.kind}
                   </span>
                   <div
-                    className={`size-6 rounded-full grid place-items-center ${
-                      dark ? "bg-gold/20" : "bg-cream"
-                    }`}
+                    className={`size-6 rounded-full grid place-items-center ${dark ? "bg-gold/20" : "bg-cream"}`}
                   >
                     <Icon
                       className={`size-3 ${dark ? "text-gold" : "text-navy"}`}
@@ -204,9 +199,7 @@ function Dashboard() {
                   {it.title}
                 </p>
                 <p
-                  className={`text-xs mt-1 leading-relaxed ${
-                    dark ? "text-cream/70" : "text-ink-muted"
-                  }`}
+                  className={`text-xs mt-1 leading-relaxed ${dark ? "text-cream/70" : "text-ink-muted"}`}
                 >
                   {it.detail}
                 </p>
@@ -214,7 +207,7 @@ function Dashboard() {
             );
           })}
           <Link
-            to="/ai-insights"
+            href="/ai-insights"
             className="inline-flex items-center gap-1 text-xs text-navy font-medium hover:text-gold"
           >
             View all insights <ArrowUpRight className="size-3" />
@@ -222,7 +215,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Teachers Payroll Table + Parent updates */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2 overflow-hidden">
           <div className="p-6 border-b border-hairline flex justify-between items-center">
@@ -235,7 +227,7 @@ function Dashboard() {
               </p>
             </div>
             <Link
-              to="/payroll"
+              href="/payroll"
               className="text-xs text-navy/70 hover:text-navy underline underline-offset-4"
             >
               Open payroll
@@ -257,30 +249,24 @@ function Dashboard() {
                   .filter((t) => t.employmentType === "Hourly")
                   .slice(0, 6)
                   .map((t) => (
-                    <tr
-                      key={t.id}
-                      className="hover:bg-cream/40 transition-colors"
-                    >
-                      <td className="px-6 py-3.5">
+                    <tr key={t.id} className="hover:bg-cream/30">
+                      <td className="px-6 py-4">
                         <div className="font-medium text-navy">{t.name}</div>
-                        <div className="text-[11px] text-ink-muted">
-                          {t.title} · {t.id}
+                        <div className="text-[11px] text-ink-muted font-mono">
+                          {t.id}
                         </div>
                       </td>
-                      <td className="px-6 py-3.5 text-ink-muted">
+                      <td className="px-6 py-4 text-ink-muted">
                         {t.specialization}
                       </td>
-                      <td className="px-6 py-3.5 font-mono text-xs">
-                        ${t.hourlyRate.toFixed(2)}
+                      <td className="px-6 py-4 font-mono text-xs">
+                        ${t.hourlyRate}/hr
                       </td>
-                      <td className="px-6 py-3.5 font-mono text-xs">
-                        {t.hoursLogged.toFixed(1)}
+                      <td className="px-6 py-4 font-mono text-xs">
+                        {t.hoursLogged}
                       </td>
-                      <td className="px-6 py-3.5 text-right font-mono font-bold text-navy">
-                        $
-                        {computePay(t).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        })}
+                      <td className="px-6 py-4 text-right font-medium text-navy">
+                        ${computePay(t).toLocaleString()}
                       </td>
                     </tr>
                   ))}
@@ -289,85 +275,56 @@ function Dashboard() {
           </div>
         </Card>
 
-        <div className="space-y-6">
-          <Card className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display italic text-lg">Parent Feed</h3>
-              <Link
-                to="/parents"
-                className="text-[11px] text-ink-muted hover:text-navy"
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-display italic text-lg">Parent Updates</h3>
+              <p className="text-xs text-ink-muted">Recent guardian messages</p>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {parentUpdates.slice(0, 4).map((u, i) => (
+              <div
+                key={i}
+                className="p-3 rounded-lg bg-cream/50 border border-hairline"
               >
-                View all
-              </Link>
-            </div>
-            <div className="space-y-4">
-              {parentUpdates.map((p) => (
-                <div key={p.child} className="flex gap-3">
-                  <div className="size-9 rounded-full bg-gradient-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold shrink-0">
-                    {p.child[0]}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-medium text-navy">
-                      {p.child}{" "}
-                      <span className="text-ink-muted font-normal">
-                        · {p.when}
-                      </span>
-                    </div>
-                    <p className="text-xs text-ink-muted leading-relaxed mt-0.5">
-                      {p.note}
-                    </p>
-                    <span className="inline-block mt-1.5 text-[10px] font-mono uppercase tracking-widest text-gold">
-                      {p.type}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="p-5">
-            <h3 className="font-display italic text-lg mb-3">Notifications</h3>
-            <div className="space-y-3">
-              {notifications.map((n) => (
-                <div
-                  key={n.title}
-                  className="flex justify-between gap-3 text-xs"
-                >
+                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="font-medium text-navy">{n.title}</div>
-                    <div className="text-ink-muted">{n.desc}</div>
+                    <p className="font-medium text-sm text-navy">{u.child}</p>
+                    <p className="text-[11px] text-ink-muted">{u.note}</p>
                   </div>
-                  <div className="text-ink-muted font-mono shrink-0">
-                    {n.when}
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-gold">
+                    {u.type}
+                  </span>
+                </div>
+                <p className="mt-2 text-[10px] font-mono text-ink-muted">
+                  {u.when}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-ink-muted mb-3">
+              Notifications
+            </h4>
+            <div className="space-y-2">
+              {notifications.slice(0, 3).map((n, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <div className="size-2 rounded-full bg-gold mt-1.5 shrink-0" />
+                  <div>
+                    <p className="text-navy text-sm">{n.title}</p>
+                    <p className="text-ink-muted text-xs">{n.desc}</p>
+                    <p className="text-ink-muted text-[10px] font-mono mt-0.5">
+                      {n.when}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
-          </Card>
-
-          <Card className="p-5">
-            <h3 className="font-display italic text-lg mb-3">
-              Weekly Performance
-            </h3>
-            <div className="h-32">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={enrollmentSeries}>
-                  <Line
-                    type="monotone"
-                    dataKey="performance"
-                    stroke="#d4a94a"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <XAxis dataKey="month" hide />
-                  <YAxis hide domain={[80, 95]} />
-                  <Tooltip contentStyle={{ fontSize: 11, borderRadius: 6 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
-    </>
+    </DashboardShell>
   );
 }

@@ -1,11 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, KpiCard, PageHeader } from "../components/dashboard/DashboardLayout";
-import { lessonAudits } from "../lib/mock-data";
-import { Sparkles, PlayCircle } from "lucide-react";
+import { PlayCircle, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/curriculum")({
-  component: CurriculumPage,
-});
+import { Card, KpiCard, PageHeader } from "../components/dashboard-shell";
+import { lessonAudits } from "@/lib/mock-data";
 
 function statusColor(s: string) {
   if (s === "Aligned") return "bg-emerald-50 text-emerald-700";
@@ -13,8 +9,11 @@ function statusColor(s: string) {
   return "bg-rose-50 text-rose-700";
 }
 
-function CurriculumPage() {
-  const avg = Math.round(lessonAudits.reduce((s, x) => s + x.alignment, 0) / lessonAudits.length);
+export default function CurriculumPage() {
+  const avg = Math.round(
+    lessonAudits.reduce((s, x) => s + x.alignment, 0) / lessonAudits.length,
+  );
+
   return (
     <>
       <PageHeader
@@ -29,16 +28,34 @@ function CurriculumPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
         <KpiCard label="Avg Alignment" value={`${avg}%`} progress={avg} />
-        <KpiCard label="Plans Audited" value={String(lessonAudits.length)} hint="this week" />
-        <KpiCard label="Critical Flags" value={String(lessonAudits.filter((a) => a.status === "Off-track").length)} accent="gold" hint="need review" />
-        <KpiCard label="Coverage Streak" value="12w" hint="consecutive weeks" accent="green" />
+        <KpiCard
+          label="Plans Audited"
+          value={String(lessonAudits.length)}
+          hint="this week"
+        />
+        <KpiCard
+          label="Critical Flags"
+          value={String(
+            lessonAudits.filter((a) => a.status === "Off-track").length,
+          )}
+          accent="gold"
+          hint="need review"
+        />
+        <KpiCard
+          label="Coverage Streak"
+          value="12w"
+          hint="consecutive weeks"
+          accent="green"
+        />
       </div>
 
       <Card className="overflow-hidden">
         <div className="p-6 border-b border-hairline flex items-center justify-between">
           <div>
             <h3 className="font-display italic text-lg">Recent audits</h3>
-            <p className="text-xs text-ink-muted">Alignment against national + Rawdah standards</p>
+            <p className="text-xs text-ink-muted">
+              Alignment against national + Rawdah standards
+            </p>
           </div>
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold font-mono">
             <Sparkles className="size-3" /> AI live
@@ -77,10 +94,14 @@ function CurriculumPage() {
                   </div>
                 </td>
                 <td className="px-6 py-4 text-xs text-ink-muted">
-                  {a.gaps.length === 0 ? "No gaps detected." : a.gaps.join(" · ")}
+                  {a.gaps.length === 0
+                    ? "No gaps detected."
+                    : a.gaps.join(" · ")}
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${statusColor(a.status)}`}>
+                  <span
+                    className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${statusColor(a.status)}`}
+                  >
                     {a.status}
                   </span>
                 </td>

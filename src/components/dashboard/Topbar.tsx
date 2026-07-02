@@ -1,5 +1,9 @@
+"use client";
+
+"use client";
+
 import { Bell, Search } from "lucide-react";
-import { useRouterState } from "@tanstack/react-router";
+import { usePathname } from "next/navigation";
 
 const titles: Record<string, { title: string; subtitle: string }> = {
   "/": {
@@ -49,7 +53,7 @@ const titles: Record<string, { title: string; subtitle: string }> = {
 };
 
 export function Topbar() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const pathname = usePathname() || "/";
   const meta = titles[pathname] ?? titles["/"];
 
   return (

@@ -1,13 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, PageHeader } from "../components/dashboard/DashboardLayout";
-import { staff } from "../lib/mock-data";
 import { Plus } from "lucide-react";
 
-export const Route = createFileRoute("/staff")({
-  component: StaffPage,
-});
+import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
+import { staff } from "@/lib/mock-data";
 
-function StaffPage() {
+export default function StaffPage() {
   return (
     <>
       <PageHeader
@@ -40,7 +36,9 @@ function StaffPage() {
                     </div>
                     <div>
                       <div className="font-medium text-navy">{s.name}</div>
-                      <div className="text-[11px] text-ink-muted">{s.email}</div>
+                      <div className="text-[11px] text-ink-muted">
+                        {s.email}
+                      </div>
                     </div>
                   </div>
                 </td>

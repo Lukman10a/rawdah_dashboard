@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import "../src/styles.css";
+import "../styles.css";
 
 export const metadata: Metadata = {
   title: "Rawdah LMS · Admin Console",

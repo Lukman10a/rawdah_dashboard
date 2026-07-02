@@ -19,11 +19,10 @@ import {
 } from "lucide-react";
 
 import {
-  DashboardShell,
   Card,
   KpiCard,
   PageHeader,
-} from "./components/dashboard-shell";
+} from "@/components/dashboard/dashboard-shell";
 import {
   aiInsights,
   computePay,
@@ -46,7 +45,7 @@ export default function DashboardPage() {
   const activeTeachers = teachers.filter((t) => t.status === "Active").length;
 
   return (
-    <DashboardShell>
+    <>
       <PageHeader
         title="Institutional Overview"
         description="Real-time intelligence for Rawdatul Atfaal · Term III"
@@ -325,6 +324,6 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
-    </DashboardShell>
+    </>
   );
 }

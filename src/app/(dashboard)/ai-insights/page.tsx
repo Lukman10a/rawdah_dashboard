@@ -6,7 +6,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { Card, PageHeader } from "../components/dashboard-shell";
+import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { aiInsights } from "@/lib/mock-data";
 
 import type { LucideIcon } from "lucide-react";

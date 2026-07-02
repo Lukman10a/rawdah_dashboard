@@ -1,6 +1,6 @@
 import { PlayCircle, Sparkles } from "lucide-react";
 
-import { Card, KpiCard, PageHeader } from "../components/dashboard-shell";
+import { Card, KpiCard, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { lessonAudits } from "@/lib/mock-data";
 
 function statusColor(s: string) {

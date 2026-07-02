@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 
-import { Card, PageHeader } from "../components/dashboard-shell";
+import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { staff } from "@/lib/mock-data";
 
 export default function StaffPage() {

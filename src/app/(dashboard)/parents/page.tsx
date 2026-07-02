@@ -1,6 +1,6 @@
 import { Mail, Phone } from "lucide-react";
 
-import { Card, PageHeader } from "../components/dashboard-shell";
+import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { parentUpdates, parents, students } from "@/lib/mock-data";
 
 export default function ParentsPage() {

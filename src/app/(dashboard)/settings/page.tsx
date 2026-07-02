@@ -1,4 +1,4 @@
-import { Card, PageHeader } from "../components/dashboard-shell";
+import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
 
 export default function SettingsPage() {
   return (

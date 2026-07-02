@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 
-import { Card, KpiCard, PageHeader } from "../components/dashboard-shell";
+import { Card, KpiCard, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { students } from "@/lib/mock-data";
 
 export default function StudentsPage() {

@@ -3,7 +3,7 @@
 import { Download, Sparkles } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-import { Card, KpiCard, PageHeader } from "../components/dashboard-shell";
+import { Card, KpiCard, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { computePay, payrollBreakdown, teachers } from "@/lib/mock-data";
 
 const PALETTE = ["#0a1834", "#d4a94a", "#3f5378", "#a68238", "#c9b99a"];

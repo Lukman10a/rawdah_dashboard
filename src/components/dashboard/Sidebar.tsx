@@ -1,4 +1,7 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -14,44 +17,44 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-type NavItem = { to: string; label: string; icon: LucideIcon };
+type NavItem = { href: string; label: string; icon: LucideIcon };
 
 const groups: { title: string; items: NavItem[] }[] = [
   {
     title: "Academic",
     items: [
-      { to: "/", label: "Dashboard", icon: LayoutDashboard },
-      { to: "/staff", label: "Staff", icon: Users },
-      { to: "/teachers", label: "Teachers", icon: GraduationCap },
-      { to: "/students", label: "Students", icon: UserSquare2 },
-      { to: "/parents", label: "Parents", icon: HeartHandshake },
+      { href: "/", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/staff", label: "Staff", icon: Users },
+      { href: "/teachers", label: "Teachers", icon: GraduationCap },
+      { href: "/students", label: "Students", icon: UserSquare2 },
+      { href: "/parents", label: "Parents", icon: HeartHandshake },
     ],
   },
   {
     title: "Operations",
     items: [
-      { to: "/attendance", label: "Attendance", icon: CalendarCheck },
-      { to: "/payroll", label: "Payroll", icon: Wallet },
-      { to: "/curriculum", label: "Curriculum", icon: BookOpenCheck },
+      { href: "/attendance", label: "Attendance", icon: CalendarCheck },
+      { href: "/payroll", label: "Payroll", icon: Wallet },
+      { href: "/curriculum", label: "Curriculum", icon: BookOpenCheck },
     ],
   },
   {
     title: "Intelligence",
     items: [
-      { to: "/ai-insights", label: "AI Insights", icon: Sparkles },
-      { to: "/chatbot", label: "Chatbot", icon: Bot },
-      { to: "/settings", label: "Settings", icon: Settings },
+      { href: "/ai-insights", label: "AI Insights", icon: Sparkles },
+      { href: "/chatbot", label: "Chatbot", icon: Bot },
+      { href: "/settings", label: "Settings", icon: Settings },
     ],
   },
 ];
 
 export function Sidebar() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const pathname = usePathname() || "/";
 
   return (
     <aside className="w-64 shrink-0 bg-navy text-cream flex flex-col sticky top-0 h-screen border-r border-gold/20">
       <div className="p-6 border-b border-white/5">
-        <Link to="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="size-9 bg-gold rounded-sm grid place-items-center text-navy font-display font-bold text-lg">
             R
           </div>
@@ -74,12 +77,12 @@ export function Sidebar() {
             </div>
             <div className="space-y-1">
               {group.items.map((item) => {
-                const active = pathname === item.to;
+                const active = pathname === item.href;
                 const Icon = item.icon;
                 return (
                   <Link
-                    key={item.to}
-                    to={item.to}
+                    key={item.href}
+                    href={item.href}
                     className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                       active
                         ? "bg-white/10 text-gold"

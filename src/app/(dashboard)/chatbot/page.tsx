@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Sparkles } from "lucide-react";
 
-import { Card, PageHeader } from "../components/dashboard-shell";
+import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
 
 type Msg = { role: "user" | "ai"; text: string };
 

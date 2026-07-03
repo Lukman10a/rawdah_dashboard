@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, Menu, Search } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const titles: Record<string, { title: string; subtitle: string }> = {
   "/": {
@@ -48,11 +48,33 @@ const titles: Record<string, { title: string; subtitle: string }> = {
     title: "Settings",
     subtitle: "Institute preferences and roles",
   },
+  "/notifications": {
+    title: "Notifications",
+    subtitle: "Alerts, history and delivery controls",
+  },
+  "/notifications/alerts": {
+    title: "Notifications",
+    subtitle: "Alert centre and high-priority updates",
+  },
+  "/notifications/history": {
+    title: "Notifications",
+    subtitle: "Resolved and archived activity",
+  },
+  "/notifications/preferences": {
+    title: "Notifications",
+    subtitle: "Channel preferences and delivery rules",
+  },
 };
 
 export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const pathname = usePathname() || "/";
+  const router = useRouter();
   const meta = titles[pathname] ?? titles["/"];
+
+  const handleSignOut = () => {
+    document.cookie = "rawdah_auth=; path=/; max-age=0";
+    router.push("/auth");
+  };
 
   return (
     <header className="h-16 border-b border-hairline bg-white/70 backdrop-blur px-4 sm:px-8 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-20">
@@ -87,6 +109,13 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gold" />
         </button>
         <div className="h-5 w-px bg-hairline" />
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="text-sm font-medium px-3 sm:px-4 h-9 border border-hairline bg-white text-navy rounded-md hover:bg-cream transition"
+        >
+          Sign out
+        </button>
         <button className="text-sm font-medium px-3 sm:px-4 h-9 bg-gold text-navy rounded-md hover:brightness-105 transition">
           New Session
         </button>

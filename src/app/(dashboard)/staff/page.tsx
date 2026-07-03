@@ -1,3 +1,5 @@
+import Link from "next/link";
+import RowLink from "@/components/dashboard/RowLink";
 import { Plus } from "lucide-react";
 
 import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
@@ -30,31 +32,41 @@ export default function StaffPage() {
             {staff.map((s) => (
               <tr key={s.id} className="hover:bg-cream/40 transition-colors">
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="size-9 rounded-full bg-gradient-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
-                      {s.name.split(" ").slice(-1)[0][0]}
-                    </div>
-                    <div>
-                      <div className="font-medium text-navy">{s.name}</div>
-                      <div className="text-[11px] text-ink-muted">
-                        {s.email}
+                  <RowLink href={`/staff/${s.id}`}>
+                    <div className="flex items-center gap-3">
+                      <div className="size-9 rounded-full bg-linear-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
+                        {s.name.split(" ").slice(-1)[0][0]}
+                      </div>
+                      <div>
+                        <div className="font-medium text-navy">{s.name}</div>
+                        <div className="text-[11px] text-ink-muted">
+                          {s.email}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </RowLink>
                 </td>
-                <td className="px-6 py-4">{s.role}</td>
-                <td className="px-6 py-4 text-ink-muted">{s.department}</td>
-                <td className="px-6 py-4 font-mono text-xs">{s.joined}</td>
                 <td className="px-6 py-4">
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                      s.status === "Active"
-                        ? "bg-emerald-50 text-emerald-700"
-                        : "bg-amber-50 text-amber-700"
-                    }`}
-                  >
-                    {s.status}
-                  </span>
+                  <RowLink href={`/staff/${s.id}`}>{s.role}</RowLink>
+                </td>
+                <td className="px-6 py-4 text-ink-muted">
+                  <RowLink href={`/staff/${s.id}`}>{s.department}</RowLink>
+                </td>
+                <td className="px-6 py-4 font-mono text-xs">
+                  <RowLink href={`/staff/${s.id}`}>{s.joined}</RowLink>
+                </td>
+                <td className="px-6 py-4">
+                  <RowLink href={`/staff/${s.id}`}>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                        s.status === "Active"
+                          ? "bg-emerald-50 text-emerald-700"
+                          : "bg-amber-50 text-amber-700"
+                      }`}
+                    >
+                      {s.status}
+                    </span>
+                  </RowLink>
                 </td>
               </tr>
             ))}

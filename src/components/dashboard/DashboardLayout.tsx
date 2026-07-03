@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { ChatbotFab } from "./ChatBotFab";
+import { Toaster } from "@/components/ui/sonner";
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,6 +22,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       </main>
       <ChatbotFab />
+      <Toaster richColors position="bottom-right" />
     </div>
   );
 }

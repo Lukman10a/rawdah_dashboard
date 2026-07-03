@@ -1,3 +1,5 @@
+import Link from "next/link";
+import RowLink from "@/components/dashboard/RowLink";
 import { Plus } from "lucide-react";
 
 import {
@@ -71,52 +73,68 @@ export default function StudentsPage() {
             {students.map((s) => (
               <tr key={s.id} className="hover:bg-cream/40">
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="size-9 rounded-full bg-gradient-to-br from-gold-soft to-gold grid place-items-center text-navy text-xs font-bold">
-                      {s.name[0]}
-                    </div>
-                    <div>
-                      <div className="font-medium text-navy">{s.name}</div>
-                      <div className="text-[11px] text-ink-muted font-mono">
-                        {s.id}
+                  <RowLink href={`/students/${s.id}`}>
+                    <div className="flex items-center gap-3">
+                      <div className="size-9 rounded-full bg-linear-to-br from-gold-soft to-gold grid place-items-center text-navy text-xs font-bold">
+                        {s.name[0]}
+                      </div>
+                      <div>
+                        <div className="font-medium text-navy">{s.name}</div>
+                        <div className="text-[11px] text-ink-muted font-mono">
+                          {s.id}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </RowLink>
                 </td>
-                <td className="px-6 py-4">{s.grade}</td>
                 <td className="px-6 py-4">
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-navy/5 text-navy">
-                    {s.program}
-                  </span>
+                  <RowLink href={`/students/${s.id}`}>{s.grade}</RowLink>
                 </td>
-                <td className="px-6 py-4 text-ink-muted">{s.guardian}</td>
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-16 h-1 bg-navy/5 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-navy"
-                        style={{ width: `${s.performance}%` }}
-                      />
+                  <RowLink href={`/students/${s.id}`}>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-navy/5 text-navy">
+                      {s.program}
+                    </span>
+                  </RowLink>
+                </td>
+                <td className="px-6 py-4 text-ink-muted">
+                  <RowLink href={`/students/${s.id}`}>{s.guardian}</RowLink>
+                </td>
+                <td className="px-6 py-4">
+                  <RowLink href={`/students/${s.id}`}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-16 h-1 bg-navy/5 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-navy"
+                          style={{ width: `${s.performance}%` }}
+                        />
+                      </div>
+                      <span className="font-mono text-xs">
+                        {s.performance}%
+                      </span>
                     </div>
-                    <span className="font-mono text-xs">{s.performance}%</span>
-                  </div>
+                  </RowLink>
                 </td>
-                <td className="px-6 py-4 font-mono text-xs">{s.attendance}%</td>
+                <td className="px-6 py-4 font-mono text-xs">
+                  <RowLink href={`/students/${s.id}`}>{s.attendance}%</RowLink>
+                </td>
                 <td className="px-6 py-4">
-                  <span
-                    className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      s.behavior === "Excellent"
-                        ? "bg-emerald-50 text-emerald-700"
-                        : s.behavior === "Good"
-                          ? "bg-cream text-navy"
-                          : "bg-amber-50 text-amber-700"
-                    }`}
-                  >
-                    {s.behavior}
-                  </span>
+                  <RowLink href={`/students/${s.id}`}>
+                    <span
+                      className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                        s.behavior === "Excellent"
+                          ? "bg-emerald-50 text-emerald-700"
+                          : s.behavior === "Good"
+                            ? "bg-cream text-navy"
+                            : "bg-amber-50 text-amber-700"
+                      }`}
+                    >
+                      {s.behavior}
+                    </span>
+                  </RowLink>
                 </td>
                 <td className="px-6 py-4 text-ink-muted text-xs">
-                  {s.lastReport}
+                  <RowLink href={`/students/${s.id}`}>{s.lastReport}</RowLink>
                 </td>
               </tr>
             ))}

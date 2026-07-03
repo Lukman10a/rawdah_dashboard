@@ -1,3 +1,5 @@
+import Link from "next/link";
+import RowLink from "@/components/dashboard/RowLink";
 import { Plus, Star } from "lucide-react";
 
 import {
@@ -81,77 +83,97 @@ export default function TeachersPage() {
               {teachers.map((t) => (
                 <tr key={t.id} className="hover:bg-cream/40 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-full bg-gradient-to-br from-navy-soft to-navy grid place-items-center text-cream text-xs font-bold">
-                        {t.name.split(" ").slice(-1)[0][0]}
-                      </div>
-                      <div>
-                        <div className="font-medium text-navy">{t.name}</div>
-                        <div className="text-[11px] text-ink-muted">
-                          {t.title} · {t.id}
+                    <RowLink href={`/teachers/${t.id}`}>
+                      <div className="flex items-center gap-3">
+                        <div className="size-9 rounded-full bg-linear-to-br from-navy-soft to-navy grid place-items-center text-cream text-xs font-bold">
+                          {t.name.split(" ").slice(-1)[0][0]}
+                        </div>
+                        <div>
+                          <div className="font-medium text-navy">{t.name}</div>
+                          <div className="text-[11px] text-ink-muted">
+                            {t.title} · {t.id}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4 text-ink-muted">
-                    {t.specialization}
+                    <RowLink href={`/teachers/${t.id}`}>
+                      {t.specialization}
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4">
-                    <span
-                      className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        t.employmentType === "Hourly"
-                          ? "bg-gold/15 text-navy"
-                          : "bg-navy/5 text-navy"
-                      }`}
-                    >
-                      {t.employmentType}
-                    </span>
+                    <RowLink href={`/teachers/${t.id}`}>
+                      <span
+                        className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                          t.employmentType === "Hourly"
+                            ? "bg-gold/15 text-navy"
+                            : "bg-navy/5 text-navy"
+                        }`}
+                      >
+                        {t.employmentType}
+                      </span>
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4 font-mono text-xs">
-                    {t.employmentType === "Hourly"
-                      ? `$${t.hourlyRate.toFixed(2)}/hr`
-                      : `$${t.salaryMonthly?.toLocaleString()}/mo`}
+                    <RowLink href={`/teachers/${t.id}`}>
+                      {t.employmentType === "Hourly"
+                        ? `$${t.hourlyRate.toFixed(2)}/hr`
+                        : `$${t.salaryMonthly?.toLocaleString()}/mo`}
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4 font-mono text-xs">
-                    {t.employmentType === "Hourly"
-                      ? t.hoursLogged.toFixed(1)
-                      : "—"}
+                    <RowLink href={`/teachers/${t.id}`}>
+                      {t.employmentType === "Hourly"
+                        ? t.hoursLogged.toFixed(1)
+                        : "—"}
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-1 bg-navy/5 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gold"
-                          style={{ width: `${t.attendance}%` }}
-                        />
+                    <RowLink href={`/teachers/${t.id}`}>
+                      <div className="flex items-center gap-2">
+                        <div className="w-16 h-1 bg-navy/5 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gold"
+                            style={{ width: `${t.attendance}%` }}
+                          />
+                        </div>
+                        <span className="font-mono text-xs">
+                          {t.attendance}%
+                        </span>
                       </div>
-                      <span className="font-mono text-xs">{t.attendance}%</span>
-                    </div>
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="inline-flex items-center gap-1 text-xs">
-                      <Star className="size-3 fill-gold text-gold" />{" "}
-                      {t.rating.toFixed(1)}
-                    </div>
+                    <RowLink href={`/teachers/${t.id}`}>
+                      <div className="inline-flex items-center gap-1 text-xs">
+                        <Star className="size-3 fill-gold text-gold" />{" "}
+                        {t.rating.toFixed(1)}
+                      </div>
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4 text-right font-mono font-bold text-navy">
-                    $
-                    {computePay(t).toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    })}
+                    <RowLink href={`/teachers/${t.id}`}>
+                      $
+                      {computePay(t).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                    </RowLink>
                   </td>
                   <td className="px-6 py-4">
-                    <span
-                      className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        t.status === "Active"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : t.status === "On Leave"
-                            ? "bg-amber-50 text-amber-700"
-                            : "bg-slate-100 text-slate-600"
-                      }`}
-                    >
-                      {t.status}
-                    </span>
+                    <RowLink href={`/teachers/${t.id}`}>
+                      <span
+                        className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                          t.status === "Active"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : t.status === "On Leave"
+                              ? "bg-amber-50 text-amber-700"
+                              : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        {t.status}
+                      </span>
+                    </RowLink>
                   </td>
                 </tr>
               ))}

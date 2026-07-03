@@ -85,7 +85,11 @@ export function Sidebar({
               </div>
               <div className="space-y-1">
                 {group.items.map((item) => {
-                  const active = pathname === item.href;
+                  const active =
+                    item.href === "/"
+                      ? pathname === "/"
+                      : pathname === item.href ||
+                        pathname.startsWith(item.href + "/");
                   const Icon = item.icon;
                   return (
                     <Link
@@ -162,7 +166,11 @@ export function Sidebar({
                 </div>
                 <div className="space-y-1">
                   {group.items.map((item) => {
-                    const active = pathname === item.href;
+                    const active =
+                      item.href === "/"
+                        ? pathname === "/"
+                        : pathname === item.href ||
+                          pathname.startsWith(item.href + "/");
                     const Icon = item.icon;
                     return (
                       <Link

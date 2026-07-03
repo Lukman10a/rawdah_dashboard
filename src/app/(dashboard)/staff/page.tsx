@@ -1,4 +1,5 @@
 import Link from "next/link";
+import RowLink from "@/components/dashboard/RowLink";
 import { Plus } from "lucide-react";
 
 import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
@@ -31,7 +32,7 @@ export default function StaffPage() {
             {staff.map((s) => (
               <tr key={s.id} className="hover:bg-cream/40 transition-colors">
                 <td className="px-6 py-4">
-                  <Link href={`/staff/${s.id}`} className="block w-full">
+                  <RowLink href={`/staff/${s.id}`}>
                     <div className="flex items-center gap-3">
                       <div className="size-9 rounded-full bg-linear-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
                         {s.name.split(" ").slice(-1)[0][0]}
@@ -43,25 +44,19 @@ export default function StaffPage() {
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </RowLink>
                 </td>
                 <td className="px-6 py-4">
-                  <Link href={`/staff/${s.id}`} className="block w-full">
-                    {s.role}
-                  </Link>
+                  <RowLink href={`/staff/${s.id}`}>{s.role}</RowLink>
                 </td>
                 <td className="px-6 py-4 text-ink-muted">
-                  <Link href={`/staff/${s.id}`} className="block w-full">
-                    {s.department}
-                  </Link>
+                  <RowLink href={`/staff/${s.id}`}>{s.department}</RowLink>
                 </td>
                 <td className="px-6 py-4 font-mono text-xs">
-                  <Link href={`/staff/${s.id}`} className="block w-full">
-                    {s.joined}
-                  </Link>
+                  <RowLink href={`/staff/${s.id}`}>{s.joined}</RowLink>
                 </td>
                 <td className="px-6 py-4">
-                  <Link href={`/staff/${s.id}`} className="block w-full">
+                  <RowLink href={`/staff/${s.id}`}>
                     <span
                       className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
                         s.status === "Active"
@@ -71,7 +66,7 @@ export default function StaffPage() {
                     >
                       {s.status}
                     </span>
-                  </Link>
+                  </RowLink>
                 </td>
               </tr>
             ))}

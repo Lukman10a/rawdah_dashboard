@@ -7,12 +7,36 @@ export function generateStaticParams() {
   return students.map((student) => ({ id: student.id }));
 }
 
-export default function StudentDetailsPage({
+export default async function StudentDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const student = students.find((item) => item.id === params.id);
+  const { id } = await params;
+
+  function findStudentById(id: string) {
+    const exact = students.find((s) => s.id === id);
+    if (exact) return exact;
+    const ci = students.find(
+      (s) =>
+        typeof s.id === "string" && s.id.toLowerCase() === id.toLowerCase(),
+    );
+    if (ci) return ci;
+    const normalized = id.replace(/^r-?/i, "");
+    return (
+      students.find(
+        (s) =>
+          typeof s.id === "string" && s.id.replace(/^r-?/i, "") === normalized,
+      ) ||
+      students.find(
+        (s) =>
+          typeof s.id === "string" &&
+          s.id.replace(/^r-?/i, "").toLowerCase() === normalized.toLowerCase(),
+      )
+    );
+  }
+
+  const student = findStudentById(id);
   if (!student) return notFound();
 
   return (
@@ -83,7 +107,10 @@ export default function StudentDetailsPage({
               schedule a support session.
             </p>
           </div>
-          <StudentDetailsActions name={student.name} guardian={student.guardian} />
+          <StudentDetailsActions
+            name={student.name}
+            guardian={student.guardian}
+          />
         </Card>
       </div>
     </div>

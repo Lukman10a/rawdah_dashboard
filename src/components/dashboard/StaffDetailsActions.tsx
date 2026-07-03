@@ -92,7 +92,8 @@ export function StaffDetailsActions({
           <DialogHeader>
             <DialogTitle>Update availability</DialogTitle>
             <DialogDescription>
-              Change the staff member's availability state for planning and payroll.
+              Change the staff member's availability state for planning and
+              payroll.
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4 grid gap-3">
@@ -111,8 +112,7 @@ export function StaffDetailsActions({
                 <div className="text-xs text-ink-muted">
                   {option === "Active"
                     ? "Available for classes, meetings and admin tasks."
-                    : "Temporarily unavailable for scheduling or payroll updates."
-                  }
+                    : "Temporarily unavailable for scheduling or payroll updates."}
                 </div>
               </button>
             ))}

@@ -64,7 +64,8 @@ export function TeacherDetailsActions({
               <p className="font-semibold text-navy">{payAmount}</p>
             </div>
             <div className="rounded-2xl bg-white p-4 text-sm text-ink-muted">
-              This summary uses the latest attendance and hourly data from the current cycle. Changes automatically update the payroll forecast.
+              This summary uses the latest attendance and hourly data from the
+              current cycle. Changes automatically update the payroll forecast.
             </div>
           </div>
           <DialogFooter className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">

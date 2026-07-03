@@ -7,12 +7,36 @@ export function generateStaticParams() {
   return teachers.map((teacher) => ({ id: teacher.id }));
 }
 
-export default function TeacherDetailsPage({
+export default async function TeacherDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const teacher = teachers.find((item) => item.id === params.id);
+  const { id } = await params;
+
+  function findTeacherById(id: string) {
+    const exact = teachers.find((t) => t.id === id);
+    if (exact) return exact;
+    const ci = teachers.find(
+      (t) =>
+        typeof t.id === "string" && t.id.toLowerCase() === id.toLowerCase(),
+    );
+    if (ci) return ci;
+    const normalized = id.replace(/^t-?/i, "");
+    return (
+      teachers.find(
+        (t) =>
+          typeof t.id === "string" && t.id.replace(/^t-?/i, "") === normalized,
+      ) ||
+      teachers.find(
+        (t) =>
+          typeof t.id === "string" &&
+          t.id.replace(/^t-?/i, "").toLowerCase() === normalized.toLowerCase(),
+      )
+    );
+  }
+
+  const teacher = findTeacherById(id);
   if (!teacher) return notFound();
 
   return (

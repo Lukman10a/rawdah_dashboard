@@ -35,7 +35,7 @@ export default function StaffPage() {
                     href={`/staff/${s.id}`}
                     className="flex items-center gap-3"
                   >
-                    <div className="size-9 rounded-full bg-gradient-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
+                    <div className="size-9 rounded-full bg-linear-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
                       {s.name.split(" ").slice(-1)[0][0]}
                     </div>
                     <div>

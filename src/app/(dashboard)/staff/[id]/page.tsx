@@ -3,16 +3,39 @@ import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
 import { StaffDetailsActions } from "@/components/dashboard/StaffDetailsActions";
 import { staff } from "@/lib/mock-data";
 
-export function generateStaticParams() {
-  return staff.map((member) => ({ id: member.id }));
-}
+// export function generateStaticParams() {
+//   return staff.map((member) => ({ id: member.id }));
+// }
 
-export default function StaffDetailsPage({
+export default async function StaffDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const member = staff.find((m) => m.id === params.id);
+  const { id } = await params;
+  function findMemberById(id: string) {
+    const exact = staff.find((m) => m.id === id);
+    if (exact) return exact;
+    const ci = staff.find(
+      (m) =>
+        typeof m.id === "string" && m.id.toLowerCase() === id.toLowerCase(),
+    );
+    if (ci) return ci;
+    const normalized = id.replace(/^s-?/i, "");
+    return (
+      staff.find(
+        (m) =>
+          typeof m.id === "string" && m.id.replace(/^s-?/i, "") === normalized,
+      ) ||
+      staff.find(
+        (m) =>
+          typeof m.id === "string" &&
+          m.id.replace(/^s-?/i, "").toLowerCase() === normalized.toLowerCase(),
+      )
+    );
+  }
+
+  const member = findMemberById(id);
   if (!member) return notFound();
 
   return (
@@ -80,10 +103,14 @@ export default function StaffDetailsPage({
               Action items
             </p>
             <p className="mt-2 text-sm text-ink-muted">
-              Send messages, update availability, and keep staff records current.
+              Send messages, update availability, and keep staff records
+              current.
             </p>
           </div>
-          <StaffDetailsActions name={member.name} currentStatus={member.status} />
+          <StaffDetailsActions
+            name={member.name}
+            currentStatus={member.status}
+          />
         </Card>
       </div>
     </div>

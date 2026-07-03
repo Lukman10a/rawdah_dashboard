@@ -31,34 +31,47 @@ export default function StaffPage() {
             {staff.map((s) => (
               <tr key={s.id} className="hover:bg-cream/40 transition-colors">
                 <td className="px-6 py-4">
-                  <Link
-                    href={`/staff/${s.id}`}
-                    className="flex items-center gap-3"
-                  >
-                    <div className="size-9 rounded-full bg-linear-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
-                      {s.name.split(" ").slice(-1)[0][0]}
-                    </div>
-                    <div>
-                      <div className="font-medium text-navy">{s.name}</div>
-                      <div className="text-[11px] text-ink-muted">
-                        {s.email}
+                  <Link href={`/staff/${s.id}`} className="block w-full">
+                    <div className="flex items-center gap-3">
+                      <div className="size-9 rounded-full bg-linear-to-br from-cream to-gold-soft grid place-items-center text-navy text-xs font-bold">
+                        {s.name.split(" ").slice(-1)[0][0]}
+                      </div>
+                      <div>
+                        <div className="font-medium text-navy">{s.name}</div>
+                        <div className="text-[11px] text-ink-muted">
+                          {s.email}
+                        </div>
                       </div>
                     </div>
                   </Link>
                 </td>
-                <td className="px-6 py-4">{s.role}</td>
-                <td className="px-6 py-4 text-ink-muted">{s.department}</td>
-                <td className="px-6 py-4 font-mono text-xs">{s.joined}</td>
                 <td className="px-6 py-4">
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                      s.status === "Active"
-                        ? "bg-emerald-50 text-emerald-700"
-                        : "bg-amber-50 text-amber-700"
-                    }`}
-                  >
-                    {s.status}
-                  </span>
+                  <Link href={`/staff/${s.id}`} className="block w-full">
+                    {s.role}
+                  </Link>
+                </td>
+                <td className="px-6 py-4 text-ink-muted">
+                  <Link href={`/staff/${s.id}`} className="block w-full">
+                    {s.department}
+                  </Link>
+                </td>
+                <td className="px-6 py-4 font-mono text-xs">
+                  <Link href={`/staff/${s.id}`} className="block w-full">
+                    {s.joined}
+                  </Link>
+                </td>
+                <td className="px-6 py-4">
+                  <Link href={`/staff/${s.id}`} className="block w-full">
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                        s.status === "Active"
+                          ? "bg-emerald-50 text-emerald-700"
+                          : "bg-amber-50 text-amber-700"
+                      }`}
+                    >
+                      {s.status}
+                    </span>
+                  </Link>
                 </td>
               </tr>
             ))}

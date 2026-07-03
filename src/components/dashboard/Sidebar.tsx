@@ -13,6 +13,7 @@ import {
   BookOpenCheck,
   Sparkles,
   Bot,
+  BellRing,
   Settings,
   X,
 } from "lucide-react";
@@ -44,6 +45,7 @@ const groups: { title: string; items: NavItem[] }[] = [
     items: [
       { href: "/ai-insights", label: "AI Insights", icon: Sparkles },
       { href: "/chatbot", label: "Chatbot", icon: Bot },
+      { href: "/notifications", label: "Notifications", icon: BellRing },
       { href: "/settings", label: "Settings", icon: Settings },
     ],
   },

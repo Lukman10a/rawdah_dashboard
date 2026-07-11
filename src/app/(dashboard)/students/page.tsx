@@ -27,6 +27,7 @@ export default function StudentsPage() {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [programFilter, setProgramFilter] = useState<"All" | "Islamic" | "Western" | "Dual">("All");
+  const [role, setRole] = useState("admin");
 
   // Form states
   const [name, setName] = useState("");
@@ -35,6 +36,13 @@ export default function StudentsPage() {
   const [guardian, setGuardian] = useState("");
 
   useEffect(() => {
+    const r = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("rawdah_role="))
+      ?.split("=")[1];
+    if (r) {
+      setRole(r);
+    }
     setList(getStoredStudents());
   }, []);
 
@@ -80,6 +88,11 @@ export default function StudentsPage() {
   };
 
   const filtered = list.filter((s) => {
+    // If Teacher, limit to their classrooms (Grade 2 and Grade 5)
+    if (role === "teacher" && !["Grade 2", "Grade 5"].includes(s.grade)) {
+      return false;
+    }
+
     // Program filter
     if (programFilter !== "All" && s.program !== programFilter) return false;
 
@@ -96,24 +109,26 @@ export default function StudentsPage() {
   return (
     <>
       <PageHeader
-        title="Students"
-        description="Enrolment, performance and behaviour signals"
+        title={role === "teacher" ? "My Students" : "Students"}
+        description={role === "teacher" ? "Registries for Grade 2 and Grade 5 classrooms" : "Enrolment, performance and behaviour signals"}
         right={
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-navy text-cream text-sm font-medium hover:brightness-110"
-          >
-            <Plus className="size-4" /> Enrol student
-          </button>
+          role === "staff" || role === "admin" ? (
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-navy text-cream text-sm font-medium hover:brightness-110"
+            >
+              <Plus className="size-4" /> Enrol student
+            </button>
+          ) : undefined
         }
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
         <KpiCard
           label="Enrolled"
-          value="1,248"
-          hint="+58 this term"
+          value={String(role === "teacher" ? filtered.length : "1,248")}
+          hint={role === "teacher" ? "classroom roster" : "+58 this term"}
           accent="green"
         />
         <KpiCard
@@ -129,8 +144,8 @@ export default function StudentsPage() {
         />
         <KpiCard
           label="At-risk"
-          value="14"
-          hint="AI flagged this month"
+          value={role === "teacher" ? String(filtered.filter((s) => s.performance < 75).length) : "14"}
+          hint="needs academic support"
           accent="gold"
         />
       </div>

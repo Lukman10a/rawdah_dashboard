@@ -17,17 +17,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+const PRESETS = {
+  admin: { email: "admin@rawdah.org", pass: "admin123" },
+  staff: { email: "staff@rawdah.org", pass: "staff123" },
+  teacher: { email: "teacher@rawdah.org", pass: "teacher123" },
+  student: { email: "student@rawdah.org", pass: "student123" },
+  parent: { email: "parent@rawdah.org", pass: "parent123" },
+};
+
 export default function AuthPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [role, setRole] = useState<"admin" | "staff" | "teacher" | "student" | "parent">("admin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@rawdah.org");
+  const [password, setPassword] = useState("admin123");
   const [name, setName] = useState("");
   const [helperText, setHelperText] = useState(
-    "This is a local demo flow. Any valid-looking credentials will sign you in.",
+    "Choose a role from the dropdown above to auto-populate credentials.",
   );
+
+  const handleRoleSelect = (selected: typeof role) => {
+    setRole(selected);
+    setEmail(PRESETS[selected].email);
+    setPassword(PRESETS[selected].pass);
+    setHelperText(`Loaded preset credentials for ${selected}.`);
+  };
 
   const handleAuthenticate = (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,15 +52,32 @@ export default function AuthPage() {
         setHelperText("Please enter both your email and password.");
         return;
       }
-    } else if (!name.trim() || !email.trim() || !password.trim()) {
-      setHelperText("Please complete the full account form.");
-      return;
-    }
 
-    document.cookie = "rawdah_auth=true; path=/; max-age=604800";
-    document.cookie = `rawdah_role=${role}; path=/; max-age=604800`;
-    setHelperText(`Signed in locally as ${role}. Redirecting to the dashboard…`);
-    router.push("/");
+      // Validate credentials against presets
+      const matchedPreset = Object.entries(PRESETS).find(
+        ([_, val]) => val.email.toLowerCase() === email.toLowerCase().trim() && val.pass === password
+      );
+
+      if (!matchedPreset) {
+        setHelperText("Invalid email or password. Please use preset credentials for testing.");
+        return;
+      }
+
+      const matchedRole = matchedPreset[0] as typeof role;
+      document.cookie = "rawdah_auth=true; path=/; max-age=604800";
+      document.cookie = `rawdah_role=${matchedRole}; path=/; max-age=604800`;
+      setHelperText(`Signed in locally as ${matchedRole}. Redirecting to the dashboard…`);
+      router.push("/");
+    } else {
+      if (!name.trim() || !email.trim() || !password.trim()) {
+        setHelperText("Please complete the full account form.");
+        return;
+      }
+      document.cookie = "rawdah_auth=true; path=/; max-age=604800";
+      document.cookie = `rawdah_role=${role}; path=/; max-age=604800`;
+      setHelperText(`Registered and signed in as ${role}. Redirecting to the dashboard…`);
+      router.push("/");
+    }
   };
 
   return (
@@ -66,11 +98,14 @@ export default function AuthPage() {
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-hairline bg-white/70 p-4 shadow-sm">
-              <p className="text-sm font-medium text-navy">Single sign-in</p>
-              <p className="mt-1 text-sm text-ink-muted">
-                Use one secure entry point for staff, guardians, and admin
-                roles.
-              </p>
+              <p className="text-sm font-medium text-navy">Credentials List</p>
+              <div className="mt-2 space-y-1.5 text-xs text-ink-muted">
+                <p>• <strong>Admin:</strong> admin@rawdah.org / admin123</p>
+                <p>• <strong>Staff:</strong> staff@rawdah.org / staff123</p>
+                <p>• <strong>Teacher:</strong> teacher@rawdah.org / teacher123</p>
+                <p>• <strong>Student:</strong> student@rawdah.org / student123</p>
+                <p>• <strong>Parent:</strong> parent@rawdah.org / parent123</p>
+              </div>
             </div>
             <div className="rounded-2xl border border-hairline bg-white/70 p-4 shadow-sm">
               <p className="text-sm font-medium text-navy">Role-based access</p>
@@ -108,12 +143,12 @@ export default function AuthPage() {
               <TabsContent value="signin" className="mt-5 space-y-4">
                 <form onSubmit={handleAuthenticate} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="role">Select your role</Label>
+                    <Label htmlFor="role">Select your role to test</Label>
                     <select
                       id="role"
                       value={role}
-                      onChange={(event) => setRole(event.target.value as any)}
-                      className="h-11 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30"
+                      onChange={(event) => handleRoleSelect(event.target.value as any)}
+                      className="h-11 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30 cursor-pointer"
                     >
                       <option value="admin">Admin (Principal)</option>
                       <option value="staff">Staff (Registrar / Clerk)</option>
@@ -182,7 +217,7 @@ export default function AuthPage() {
 
                   <Button
                     type="submit"
-                    className="h-11 w-full bg-navy text-cream hover:bg-navy/90"
+                    className="h-11 w-full bg-navy text-cream hover:bg-navy/90 cursor-pointer"
                   >
                     Continue <ArrowRight className="ml-2 size-4" />
                   </Button>
@@ -197,7 +232,7 @@ export default function AuthPage() {
                       id="signup-role"
                       value={role}
                       onChange={(event) => setRole(event.target.value as any)}
-                      className="h-11 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30"
+                      className="h-11 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30 cursor-pointer"
                     >
                       <option value="admin">Admin (Principal)</option>
                       <option value="staff">Staff (Registrar / Clerk)</option>
@@ -250,7 +285,7 @@ export default function AuthPage() {
 
                   <Button
                     type="submit"
-                    className="h-11 w-full bg-gold text-navy hover:bg-gold/90"
+                    className="h-11 w-full bg-gold text-navy hover:bg-gold/90 cursor-pointer"
                   >
                     Create account <ArrowRight className="ml-2 size-4" />
                   </Button>

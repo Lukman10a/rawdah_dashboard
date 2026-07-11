@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Bell, Menu, Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -66,13 +67,33 @@ const titles: Record<string, { title: string; subtitle: string }> = {
   },
 };
 
+import { useEffect, useState } from "react";
+
 export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
   const meta = titles[pathname] ?? titles["/"];
+  const [role, setRole] = useState<string>("admin");
+
+  useEffect(() => {
+    const r = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("rawdah_role="))
+      ?.split("=")[1];
+    if (r) {
+      setRole(r);
+    }
+  }, []);
+
+  const handleRoleChange = (newRole: string) => {
+    document.cookie = `rawdah_role=${newRole}; path=/; max-age=604800`;
+    setRole(newRole);
+    window.location.reload();
+  };
 
   const handleSignOut = () => {
     document.cookie = "rawdah_auth=; path=/; max-age=0";
+    document.cookie = "rawdah_role=; path=/; max-age=0";
     router.push("/auth");
   };
 
@@ -88,9 +109,14 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           <Menu className="size-4" />
         </button>
         <div className="min-w-0">
-          <h1 className="font-display italic text-xl leading-none truncate">
-            {meta.title}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="font-display italic text-xl leading-none truncate">
+              {meta.title}
+            </h1>
+            <span className="text-[9px] font-semibold tracking-widest uppercase bg-gold/15 text-navy px-1.5 py-0.5 rounded-sm">
+              {role}
+            </span>
+          </div>
           <p className="text-[11px] text-ink-muted mt-1 truncate">
             {meta.subtitle}
           </p>
@@ -101,13 +127,31 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-muted" />
           <input
             placeholder="Search staff, students, records…"
-            className="pl-9 pr-4 h-9 w-72 rounded-md bg-cream/60 border border-hairline text-sm outline-none focus:ring-2 focus:ring-gold/30"
+            className="pl-9 pr-4 h-9 w-60 rounded-md bg-cream/60 border border-hairline text-sm outline-none focus:ring-2 focus:ring-gold/30"
           />
         </div>
-        <button className="relative size-9 grid place-items-center rounded-md hover:bg-cream border border-hairline">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-semibold text-ink-muted uppercase tracking-widest hidden lg:inline">Testing:</span>
+          <select
+            value={role}
+            onChange={(e) => handleRoleChange(e.target.value)}
+            className="h-9 rounded-md border border-hairline bg-cream/80 px-2 text-xs font-semibold text-navy outline-none focus:ring-2 focus:ring-gold/25"
+          >
+            <option value="admin">Admin</option>
+            <option value="staff">Staff</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+            <option value="parent">Parent</option>
+          </select>
+        </div>
+        <Link
+          href="/notifications"
+          className="relative size-9 grid place-items-center rounded-md hover:bg-cream border border-hairline"
+          aria-label="Open notifications"
+        >
           <Bell className="size-4 text-navy" />
           <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gold" />
-        </button>
+        </Link>
         <div className="h-5 w-px bg-hairline" />
         <button
           type="button"
@@ -115,9 +159,6 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           className="text-sm font-medium px-3 sm:px-4 h-9 border border-hairline bg-white text-navy rounded-md hover:bg-cream transition"
         >
           Sign out
-        </button>
-        <button className="text-sm font-medium px-3 sm:px-4 h-9 bg-gold text-navy rounded-md hover:brightness-105 transition">
-          New Session
         </button>
       </div>
     </header>

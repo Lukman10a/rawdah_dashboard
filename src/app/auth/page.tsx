@@ -21,6 +21,7 @@ export default function AuthPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [role, setRole] = useState<"admin" | "staff" | "teacher" | "student" | "parent">("admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -42,7 +43,8 @@ export default function AuthPage() {
     }
 
     document.cookie = "rawdah_auth=true; path=/; max-age=604800";
-    setHelperText("Signed in locally. Redirecting to the dashboard…");
+    document.cookie = `rawdah_role=${role}; path=/; max-age=604800`;
+    setHelperText(`Signed in locally as ${role}. Redirecting to the dashboard…`);
     router.push("/");
   };
 
@@ -105,6 +107,22 @@ export default function AuthPage() {
 
               <TabsContent value="signin" className="mt-5 space-y-4">
                 <form onSubmit={handleAuthenticate} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="role">Select your role</Label>
+                    <select
+                      id="role"
+                      value={role}
+                      onChange={(event) => setRole(event.target.value as any)}
+                      className="h-11 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30"
+                    >
+                      <option value="admin">Admin (Principal)</option>
+                      <option value="staff">Staff (Registrar / Clerk)</option>
+                      <option value="teacher">Teacher (Instructor)</option>
+                      <option value="student">Student</option>
+                      <option value="parent">Parent / Guardian</option>
+                    </select>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="email">Email address</Label>
                     <div className="relative">
@@ -173,6 +191,22 @@ export default function AuthPage() {
 
               <TabsContent value="signup" className="mt-5 space-y-4">
                 <form onSubmit={handleAuthenticate} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-role">Select your role</Label>
+                    <select
+                      id="signup-role"
+                      value={role}
+                      onChange={(event) => setRole(event.target.value as any)}
+                      className="h-11 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30"
+                    >
+                      <option value="admin">Admin (Principal)</option>
+                      <option value="staff">Staff (Registrar / Clerk)</option>
+                      <option value="teacher">Teacher (Instructor)</option>
+                      <option value="student">Student</option>
+                      <option value="parent">Parent / Guardian</option>
+                    </select>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="full-name">Full name</Label>
                     <Input

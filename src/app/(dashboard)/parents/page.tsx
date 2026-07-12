@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, Phone, CreditCard, DollarSign } from "lucide-react";
+import { Mail, Phone, CreditCard, DollarSign, Download, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card, PageHeader } from "@/components/dashboard/dashboard-shell";
@@ -17,6 +17,14 @@ import { Label } from "@/components/ui/label";
 import { getStoredParents, saveParents } from "@/lib/persistence";
 import { parentUpdates, students } from "@/lib/mock-data";
 
+type Receipt = {
+  receiptId: string;
+  date: string;
+  amount: number;
+  method: string;
+  invoiceRef: string;
+};
+
 type ExtendedParent = {
   id: string;
   name: string;
@@ -27,6 +35,7 @@ type ExtendedParent = {
   satisfaction: number;
   tuitionStatus?: "Paid" | "Pending" | "Overdue";
   balance?: number;
+  receipts?: Receipt[];
 };
 
 export default function ParentsPage() {
@@ -40,13 +49,29 @@ export default function ParentsPage() {
 
   useEffect(() => {
     const list = getStoredParents();
-    // Initialize default tuition status/balances if not existing
+    // Initialize default tuition status/balances & receipt history if not existing
     const mapped = list.map((p, i) => {
       const ext = p as ExtendedParent;
       return {
         ...ext,
         tuitionStatus: ext.tuitionStatus || (i % 3 === 0 ? "Paid" : i % 3 === 1 ? "Pending" : "Overdue"),
         balance: ext.balance !== undefined ? ext.balance : (i % 3 === 0 ? 0 : i % 3 === 1 ? 1250 : 2500),
+        receipts: ext.receipts || [
+          {
+            receiptId: `REC-${10234 + i}`,
+            date: "2026-06-15",
+            amount: 1250,
+            method: "Bank Transfer",
+            invoiceRef: `INV-2026-${100 + i}`,
+          },
+          {
+            receiptId: `REC-${9812 + i}`,
+            date: "2026-03-10",
+            amount: 1250,
+            method: "Card Payment",
+            invoiceRef: `INV-2026-${50 + i}`,
+          }
+        ]
       };
     });
     setParents(mapped);
@@ -220,10 +245,10 @@ export default function ParentsPage() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md rounded-2xl border border-hairline bg-white p-0 shadow-2xl">
+        <DialogContent className="max-w-md rounded-2xl border border-hairline bg-white p-0 shadow-2xl overflow-hidden">
           {selectedParent && (
             <>
-              <div className="border-b border-hairline p-6">
+              <div className="border-b border-hairline p-6 bg-white">
                 <DialogHeader>
                   <DialogTitle className="font-display text-2xl text-navy">
                     Manage billing: {selectedParent.name}
@@ -233,14 +258,14 @@ export default function ParentsPage() {
                   </DialogDescription>
                 </DialogHeader>
               </div>
-              <form className="space-y-4 p-6" onSubmit={handleSaveBilling}>
+              <form className="space-y-4 p-6 border-b border-hairline bg-white" onSubmit={handleSaveBilling}>
                 <div className="space-y-2">
                   <Label htmlFor="billing-status">Tuition Fee Status</Label>
                   <select
                     id="billing-status"
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}
-                    className="h-10 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30"
+                    className="h-10 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30 cursor-pointer"
                   >
                     <option value="Paid">Paid (Balance Clear)</option>
                     <option value="Pending">Pending Payment</option>
@@ -264,18 +289,49 @@ export default function ParentsPage() {
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="rounded-md border border-hairline px-4 py-2 text-sm text-navy"
+                    className="rounded-md border border-hairline px-4 py-2 text-sm text-navy cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="rounded-md bg-navy px-4 py-2 text-sm font-semibold text-cream"
+                    className="rounded-md bg-navy px-4 py-2 text-sm font-semibold text-cream cursor-pointer"
                   >
                     Save Changes
                   </button>
                 </div>
               </form>
+
+              {/* Invoices Log / Receipts List */}
+              <div className="p-6 bg-cream/20">
+                <h4 className="text-xs uppercase tracking-widest font-bold text-navy mb-3 flex items-center gap-1.5">
+                  <Sparkles className="size-3.5 text-gold" /> Receipts History
+                </h4>
+                <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1">
+                  {selectedParent.receipts?.map((r) => (
+                    <div key={r.receiptId} className="flex items-center justify-between p-3 bg-white border border-hairline rounded-xl text-xs shadow-xs">
+                      <div>
+                        <span className="font-semibold text-navy block">{r.invoiceRef} ({r.receiptId})</span>
+                        <span className="text-[10px] text-ink-muted font-mono">{r.date} · {r.method}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-navy">${r.amount}</span>
+                        <button
+                          type="button"
+                          onClick={() => toast.success(`Receipt ${r.receiptId} downloaded (mock).`)}
+                          className="p-1.5 rounded-lg border border-hairline bg-cream hover:bg-gold/15 text-navy transition cursor-pointer"
+                          title="Download Receipt"
+                        >
+                          <Download className="size-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {(!selectedParent.receipts || selectedParent.receipts.length === 0) && (
+                    <p className="text-xs text-ink-muted text-center py-4">No receipts recorded.</p>
+                  )}
+                </div>
+              </div>
             </>
           )}
         </DialogContent>

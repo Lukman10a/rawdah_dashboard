@@ -1,21 +1,109 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
 import RowLink from "@/components/dashboard/RowLink";
-import { Plus, Star } from "lucide-react";
+import { Plus, Star, Search } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   Card,
   KpiCard,
   PageHeader,
 } from "@/components/dashboard/dashboard-shell";
-import { computePay, teachers } from "@/lib/mock-data";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { computePay } from "@/lib/mock-data";
+import { getStoredTeachers, saveTeachers } from "@/lib/persistence";
+import type { Teacher } from "@/lib/mock-data";
 
 export default function TeachersPage() {
-  const hourly = teachers.filter((t) => t.employmentType === "Hourly");
-  const salaried = teachers.filter((t) => t.employmentType === "Salaried");
+  const [list, setList] = useState<Teacher[]>([]);
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<"All" | "Hourly" | "Salaried">("All");
+
+  // Form states
+  const [name, setName] = useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [empType, setEmpType] = useState<"Hourly" | "Salaried">("Hourly");
+  const [rateOrSalary, setRateOrSalary] = useState("");
+
+  useEffect(() => {
+    setList(getStoredTeachers());
+  }, []);
+
+  const hourly = list.filter((t) => t.employmentType === "Hourly");
+  const salaried = list.filter((t) => t.employmentType === "Salaried");
   const totalHours = hourly.reduce((s, t) => s + t.hoursLogged, 0);
-  const avgRating = (
-    teachers.reduce((s, t) => s + t.rating, 0) / teachers.length
-  ).toFixed(2);
+  const avgRating = list.length
+    ? (list.reduce((s, t) => s + t.rating, 0) / list.length).toFixed(2)
+    : "0.00";
+
+  const handleAddTeacher = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!name.trim() || !specialization.trim() || !rateOrSalary.trim()) {
+      toast.error("Please fill in all details.");
+      return;
+    }
+
+    const val = parseFloat(rateOrSalary.replace(/[^0-9.]/g, ""));
+    if (isNaN(val)) {
+      toast.error("Please enter a valid number for Rate or Salary.");
+      return;
+    }
+
+    const generatedId = `T-${String(list.length + 1).padStart(3, "0")}`;
+    const newTeacher: Teacher = {
+      id: generatedId,
+      name,
+      title: empType === "Hourly" ? "Ustadh" : "Ustadha",
+      specialization,
+      employmentType: empType,
+      hourlyRate: empType === "Hourly" ? val : 0,
+      hoursLogged: empType === "Hourly" ? 40 : 0, // default hours logged for demo
+      salaryMonthly: empType === "Salaried" ? val : undefined,
+      attendance: 98,
+      rating: 4.8,
+      email: `${name.toLowerCase().replace(/\s+/g, ".")}@rawdah.edu`,
+      phone: "+1 555 0100",
+      joined: new Date().toISOString().split("T")[0],
+      status: "Active",
+      avatarSeed: name.toLowerCase().split(" ")[0],
+    };
+
+    const updated = [...list, newTeacher];
+    setList(updated);
+    saveTeachers(updated);
+    setOpen(false);
+    toast.success(`Successfully added ${name} to teaching faculty.`);
+
+    // Reset inputs
+    setName("");
+    setSpecialization("");
+    setEmpType("Hourly");
+    setRateOrSalary("");
+  };
+
+  const filtered = list.filter((t) => {
+    // Role filter
+    if (activeFilter === "Hourly" && t.employmentType !== "Hourly") return false;
+    if (activeFilter === "Salaried" && t.employmentType !== "Salaried") return false;
+
+    // Search query
+    const query = searchQuery.toLowerCase();
+    return (
+      t.name.toLowerCase().includes(query) ||
+      t.specialization.toLowerCase().includes(query) ||
+      t.id.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <>
@@ -23,7 +111,11 @@ export default function TeachersPage() {
         title="Teaching Faculty"
         description="Instructors, load, ratings and hourly-vs-salaried mix"
         right={
-          <button className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-navy text-cream text-sm font-medium hover:brightness-110">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-navy text-cream text-sm font-medium hover:brightness-110"
+          >
             <Plus className="size-4" /> Add teacher
           </button>
         }
@@ -32,7 +124,7 @@ export default function TeachersPage() {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
         <KpiCard
           label="Total Teachers"
-          value={String(teachers.length)}
+          value={String(list.length)}
           hint={`${hourly.length} hourly · ${salaried.length} salaried`}
         />
         <KpiCard
@@ -50,18 +142,33 @@ export default function TeachersPage() {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="p-6 border-b border-hairline flex justify-between items-center">
-          <h3 className="font-display italic text-lg">Faculty Roster</h3>
-          <div className="flex gap-1.5">
-            <span className="text-[10px] px-2 py-1 rounded-full bg-cream border border-hairline">
-              All
-            </span>
-            <span className="text-[10px] px-2 py-1 rounded-full text-ink-muted">
-              Hourly
-            </span>
-            <span className="text-[10px] px-2 py-1 rounded-full text-ink-muted">
-              Salaried
-            </span>
+        <div className="p-6 border-b border-hairline flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <h3 className="font-display italic text-lg">Faculty Roster</h3>
+            <div className="flex gap-1.5">
+              {(["All", "Hourly", "Salaried"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setActiveFilter(f)}
+                  className={`text-[10px] px-2.5 py-1 rounded-full border transition cursor-pointer ${
+                    activeFilter === f
+                      ? "bg-cream border-hairline text-navy font-semibold shadow-xs"
+                      : "border-transparent text-ink-muted hover:text-navy"
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-muted" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search teachers..."
+              className="pl-9 pr-4 h-9 w-60 rounded-md bg-cream/60 border border-hairline text-sm outline-none focus:ring-2 focus:ring-gold/30 text-navy"
+            />
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -80,7 +187,7 @@ export default function TeachersPage() {
               </tr>
             </thead>
             <tbody className="text-sm divide-y divide-hairline">
-              {teachers.map((t) => (
+              {filtered.map((t) => (
                 <tr key={t.id} className="hover:bg-cream/40 transition-colors">
                   <td className="px-6 py-4">
                     <RowLink href={`/teachers/${t.id}`}>
@@ -177,10 +284,81 @@ export default function TeachersPage() {
                   </td>
                 </tr>
               ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={9} className="px-6 py-8 text-center text-sm text-ink-muted">
+                    No faculty members match the selection criteria.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </Card>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-xl rounded-2xl border border-hairline bg-white p-0 shadow-2xl">
+          <div className="border-b border-hairline p-6">
+            <DialogHeader>
+              <DialogTitle className="font-display text-2xl text-navy">Add a teacher</DialogTitle>
+              <DialogDescription className="mt-2 text-sm text-ink-muted">
+                Create a persistent record for a new faculty profile and teaching assignment.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          <form className="space-y-4 p-6" onSubmit={handleAddTeacher}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="teacher-name">Full name</Label>
+                <Input
+                  id="teacher-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ustadha Maryam"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="teacher-specialization">Specialization</Label>
+                <Input
+                  id="teacher-specialization"
+                  value={specialization}
+                  onChange={(e) => setSpecialization(e.target.value)}
+                  placeholder="Arabic Grammar"
+                />
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="teacher-type">Contract type</Label>
+                <select
+                  id="teacher-type"
+                  value={empType}
+                  onChange={(e) => setEmpType(e.target.value as any)}
+                  className="h-10 w-full rounded-md border border-hairline bg-cream/60 px-3 text-sm text-navy outline-none focus:ring-2 focus:ring-gold/30"
+                >
+                  <option value="Hourly">Hourly Instructor</option>
+                  <option value="Salaried">Salaried Faculty</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="teacher-rate">
+                  {empType === "Hourly" ? "Hourly Rate ($)" : "Monthly Salary ($)"}
+                </Label>
+                <Input
+                  id="teacher-rate"
+                  value={rateOrSalary}
+                  onChange={(e) => setRateOrSalary(e.target.value)}
+                  placeholder={empType === "Hourly" ? "42" : "4500"}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-2">
+              <button type="button" onClick={() => setOpen(false)} className="rounded-md border border-hairline px-4 py-2 text-sm text-navy">Cancel</button>
+              <button type="submit" className="rounded-md bg-gold px-4 py-2 text-sm font-medium text-navy">Save record</button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
